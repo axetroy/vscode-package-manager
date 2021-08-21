@@ -31,7 +31,7 @@ vscode extension for managing your Packages that installed in your computer.
 - [x] Install package
 - [x] Uninstall package
 - [x] Update package
-- [ ] Upgrade package manager
+- [x] Upgrade package manager
 
 Welcome to PR to support more
 
