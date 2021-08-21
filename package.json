@@ -151,7 +151,7 @@
   "devDependencies": {
     "@types/lodash": "4.14.170",
     "@types/mocha": "8.2.2",
-    "@types/node": "14.17.3",
+    "@types/node": "14.17.11",
     "@types/vscode": "1.56.0",
     "@types/which": "2.0.1",
     "rimraf": "3.0.2",
