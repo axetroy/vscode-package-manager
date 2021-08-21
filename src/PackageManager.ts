@@ -59,11 +59,11 @@ export class PackageManager {
       await window.withProgress(
         {
           location: ProgressLocation.Notification,
-          title: title,
+          title,
           cancellable: true,
         },
         async (progress, cancelToken) => {
-          return await cb(logger, cancelToken);
+          return cb(logger, cancelToken);
         }
       );
     } catch (err) {
@@ -85,7 +85,6 @@ export class PackageManager {
     inputBox.step = 1;
     inputBox.placeholder = i18n.localize("install.packageName");
     inputBox.prompt = i18n.localize("install.packageName.placeholder", item.package);
-    inputBox.validationMessage;
 
     const result = {
       packageName: "",
@@ -145,7 +144,7 @@ export class PackageManager {
     const pkgName = result.packageName + (result.version ? "@" + result.version : "");
 
     await this._createContext(i18n.localize("install.doing", pkgName), async (logger, cancelToken) => {
-      const isCanceled = await packageManager.install(result.packageName, result.version, { writer: logger, cancelToken: cancelToken }).catch((err) => {
+      const isCanceled = await packageManager.install(result.packageName, result.version, { writer: logger, cancelToken }).catch((err) => {
         if (err && (err as ExecaError).isCanceled) {
           return Promise.resolve(true);
         } else {
@@ -178,7 +177,7 @@ export class PackageManager {
     const pkgName = item.name + (item.version ? `@${item.version}` : "");
 
     await this._createContext(i18n.localize("uninstall.doing", pkgName), async (logger, cancelToken) => {
-      const isCanceled = await packageManager.uninstall(item.name, item.version, { writer: logger, cancelToken: cancelToken }).catch((err) => {
+      const isCanceled = await packageManager.uninstall(item.name, item.version, { writer: logger, cancelToken }).catch((err) => {
         if (err && (err as ExecaError).isCanceled) {
           return Promise.resolve(true);
         } else {
@@ -209,7 +208,7 @@ export class PackageManager {
     }
 
     await this._createContext(i18n.localize("update.doing", item.name), async (logger, cancelToken) => {
-      const isCanceled = await packageManager.update(item.name, item.version, "", { writer: logger, cancelToken: cancelToken }).catch((err) => {
+      const isCanceled = await packageManager.update(item.name, item.version, "", { writer: logger, cancelToken }).catch((err) => {
         if (err && (err as ExecaError).isCanceled) {
           return Promise.resolve(true);
         } else {

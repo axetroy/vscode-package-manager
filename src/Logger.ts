@@ -19,7 +19,9 @@ export class Logger extends Writable implements vscode.Disposable {
 
   public dispose() {
     this.#data = "";
-    !this.destroyed && this.dispose();
+    if (!this.destroyed) {
+      this.dispose();
+    }
   }
 
   public _write(chunk: Buffer, encoding: BufferEncoding, callback: (error?: Error | null) => void): void {

@@ -1,7 +1,6 @@
 import "reflect-metadata";
 import { Container } from "typedi";
 import * as vscode from "vscode";
-import { commands } from "vscode";
 import * as i18n from "vscode-nls-i18n";
 import { TreeProvider } from "./TreeView";
 import { PackageManager } from "./PackageManager";
@@ -24,16 +23,18 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   await packageManager.registry(new PackageManagerPIP3());
   await packageManager.registry(new PackageManagerGem());
 
-  context.subscriptions.push(commands.registerCommand("pkg.install", packageManager.install.bind(packageManager)));
+  context.subscriptions.push(vscode.commands.registerCommand("pkg.install", packageManager.install.bind(packageManager)));
 
-  context.subscriptions.push(commands.registerCommand("pkg.uninstall", packageManager.uninstall.bind(packageManager)));
+  context.subscriptions.push(vscode.commands.registerCommand("pkg.uninstall", packageManager.uninstall.bind(packageManager)));
 
-  context.subscriptions.push(commands.registerCommand("pkg.update", packageManager.update.bind(packageManager)));
+  context.subscriptions.push(vscode.commands.registerCommand("pkg.update", packageManager.update.bind(packageManager)));
 
-  context.subscriptions.push(commands.registerCommand("pkg.refresh", packageManager.refreshTree.bind(packageManager)));
+  context.subscriptions.push(vscode.commands.registerCommand("pkg.refresh", packageManager.refreshTree.bind(packageManager)));
 
   // tree view
   context.subscriptions.push(vscode.window.registerTreeDataProvider("PackageManagerExplorer", Container.get(TreeProvider)));
 }
 
-export async function deactivate(context: vscode.ExtensionContext): Promise<void> {}
+export async function deactivate(context: vscode.ExtensionContext): Promise<void> {
+  // empty block
+}
