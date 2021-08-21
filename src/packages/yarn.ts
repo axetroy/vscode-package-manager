@@ -1,19 +1,15 @@
+import os from "os";
+import path from "path";
+import fs from "fs";
 import execa from "execa";
 import which from "which";
-
 import { IActionOptions, IPackage, IPackageManager } from "./interface";
 
-interface NPMPackage {
-  version: string;
-  from?: string;
-  dependencies?: Dependency[];
-}
-
 interface Dependency {
-  [packageName: string]: NPMPackage;
+  [packageName: string]: string;
 }
 
-export class PackageManagerNPM implements IPackageManager {
+export class PackageManagerYarn implements IPackageManager {
   get name() {
     return "yarn";
   }
@@ -28,21 +24,36 @@ export class PackageManagerNPM implements IPackageManager {
   }
 
   public async packages(): Promise<IPackage[]> {
-    const ps = await execa("yarn", ["global", "list", "--depth=1"]);
+    const globalDirOs = {
+      win32: path.join(process.env.LOCALAPPDATA || "", "Yarn", "config", "global"),
+      darwin: os.homedir() + "/.config/yarn/global",
+      linux: "/usr/local/share/.config/yarn/global",
+    };
 
-    const dependencies = (JSON.parse(ps.stdout) as { dependencies: Dependency }).dependencies;
+    // @ts-expect-error ignore
+    const globalDir = globalDirOs[os.platform()] as string;
+
+    if (!globalDir) return [];
+
+    const globalPackageFile = path.join(globalDir, "package.json");
+
+    if (!fs.existsSync(globalPackageFile)) return [];
+
+    const jsonContent = fs.readFileSync(globalPackageFile, { encoding: "utf-8" });
+
+    const dependencies = (JSON.parse(jsonContent) as { dependencies: Dependency }).dependencies;
 
     const deps = Object.keys(dependencies);
 
     const packages: IPackage[] = [];
 
     for (const depName of deps) {
-      const dep = dependencies[depName];
+      const version = dependencies[depName];
 
       packages.push({
         package: this.name,
         name: depName,
-        version: dep.version,
+        version: version.replace(/^(\^|~)/, ""),
         desc: "",
       });
     }
@@ -73,7 +84,7 @@ export class PackageManagerNPM implements IPackageManager {
   }
 
   public async update(packageName: string, oldVersion: string, newVersion: string, options: IActionOptions): Promise<void> {
-    const ps = execa("yarn", ["global", "update", packageName + (newVersion ? "@" + newVersion : ""), "-g"]);
+    const ps = execa("yarn", ["global", "upgrade", packageName + (newVersion ? "@" + newVersion : ""), "-g"]);
 
     options.cancelToken.onCancellationRequested(() => ps.cancel());
 

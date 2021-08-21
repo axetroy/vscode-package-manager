@@ -5,6 +5,7 @@ import * as i18n from "vscode-nls-i18n";
 import { TreeProvider } from "./TreeView";
 import { PackageManager } from "./PackageManager";
 import { PackageManagerNPM } from "./packages/npm";
+import { PackageManagerYarn } from "./packages/yarn";
 import { PackageManagerHomeBrew } from "./packages/homebrew";
 import { PackageManagerPIP } from "./packages/pip";
 import { PackageManagerPIP3 } from "./packages/pip3";
@@ -18,6 +19,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   const packageManager = Container.get(PackageManager);
 
   await packageManager.registry(new PackageManagerNPM());
+  await packageManager.registry(new PackageManagerYarn());
   await packageManager.registry(new PackageManagerHomeBrew());
   await packageManager.registry(new PackageManagerPIP());
   await packageManager.registry(new PackageManagerPIP3());
