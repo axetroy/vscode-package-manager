@@ -62,7 +62,7 @@ export class PackageManagerYarn implements IPackageManager {
   }
 
   public async install(packageName: string, version: string, options: IActionOptions): Promise<void> {
-    const ps = execa("yarn", ["global", "add", packageName + (version ? "@" + version : ""), "-g"]);
+    const ps = execa("yarn", ["global", "add", packageName + (version ? "@" + version : "")]);
 
     options.cancelToken.onCancellationRequested(() => ps.cancel());
 
@@ -73,7 +73,7 @@ export class PackageManagerYarn implements IPackageManager {
   }
 
   public async uninstall(packageName: string, oldVersion: string, options: IActionOptions): Promise<void> {
-    const ps = execa("yarn", ["global", "remove", packageName + (oldVersion ? "@" + oldVersion : ""), "-g"]);
+    const ps = execa("yarn", ["global", "remove", packageName]);
 
     options.cancelToken.onCancellationRequested(() => ps.cancel());
 
@@ -84,7 +84,7 @@ export class PackageManagerYarn implements IPackageManager {
   }
 
   public async update(packageName: string, oldVersion: string, newVersion: string, options: IActionOptions): Promise<void> {
-    const ps = execa("yarn", ["global", "upgrade", packageName + (newVersion ? "@" + newVersion : ""), "-g"]);
+    const ps = execa("yarn", ["global", "upgrade", packageName + (newVersion ? "@" + newVersion : "")]);
 
     options.cancelToken.onCancellationRequested(() => ps.cancel());
 
