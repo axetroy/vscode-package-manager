@@ -15,6 +15,8 @@ vscode extension for managing your Packages that installed in your computer.
 
 - [x] Homebrew
 - [x] npm
+- [ ] cnpm
+- [x] pnpm
 - [x] yarn
 - [x] gem
 - [x] pip
