@@ -7,9 +7,9 @@
 
 # vscode-package-manager
 
-vscode extension for managing your Packages that installed in you computer.
+vscode extension for managing your Packages that installed in your computer.
 
-## Features
+## Supported package
 
 - [x] Homebrew
 - [x] npm
@@ -17,6 +17,8 @@ vscode extension for managing your Packages that installed in you computer.
 - [x] gem
 - [x] pip
 - [x] pip3
+- [ ] apt
+- [ ] yum
 
 Welcome to PR to support more
 
