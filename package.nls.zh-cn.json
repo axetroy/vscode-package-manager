@@ -1,0 +1,21 @@
+{
+  "ext.view.title": "包管理器",
+  "cmd.uninstall.title": "卸载",
+  "cmd.install.title": "安装",
+  "cmd.update.title": "更新",
+  "cmd.refresh.title": "刷新",
+  "btn.cancel": "取消",
+  "btn.showError": "查看错误信息",
+  "btn.showDetail": "显示详情",
+  "install.doing": "正在安装 {0} ...",
+  "install.success": "安装 {0} 成功",
+  "uninstall.doing": "正在卸载 {0} ...",
+  "uninstall.success": "卸载 {0} 成功",
+  "update.doing": "正在更新 {0} ...",
+  "update.success": "更新 {0} 成功",
+  "install.title": "安装 {0} 包",
+  "install.packageName": "包名称",
+  "install.packageName.placeholder": "请输入要安装的 {0} 包名",
+  "install.packageVersion.placeholder": "请输入版本号，不填写则为最新版",
+  "install.packageVersion.prompt": "请输入要安装的 {0} 版本号，例如 '1.0.0'"
+}

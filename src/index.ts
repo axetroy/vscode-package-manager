@@ -1,0 +1,39 @@
+import "reflect-metadata";
+import { Container } from "typedi";
+import * as vscode from "vscode";
+import { commands } from "vscode";
+import * as i18n from "vscode-nls-i18n";
+import { TreeProvider } from "./TreeView";
+import { PackageManager } from "./PackageManager";
+import { PackageManagerNPM } from "./packages/npm";
+import { PackageManagerHomeBrew } from "./packages/homebrew";
+import { PackageManagerPIP } from "./packages/pip";
+import { PackageManagerPIP3 } from "./packages/pip3";
+import { PackageManagerGem } from "./packages/gem";
+
+export async function activate(context: vscode.ExtensionContext): Promise<void> {
+  i18n.init(context.extensionPath);
+
+  Container.set("context", context);
+
+  const packageManager = Container.get(PackageManager);
+
+  await packageManager.registry(new PackageManagerNPM());
+  await packageManager.registry(new PackageManagerHomeBrew());
+  await packageManager.registry(new PackageManagerPIP());
+  await packageManager.registry(new PackageManagerPIP3());
+  await packageManager.registry(new PackageManagerGem());
+
+  context.subscriptions.push(commands.registerCommand("pkg.install", packageManager.install.bind(packageManager)));
+
+  context.subscriptions.push(commands.registerCommand("pkg.uninstall", packageManager.uninstall.bind(packageManager)));
+
+  context.subscriptions.push(commands.registerCommand("pkg.update", packageManager.update.bind(packageManager)));
+
+  context.subscriptions.push(commands.registerCommand("pkg.refresh", packageManager.refreshTree.bind(packageManager)));
+
+  // tree view
+  context.subscriptions.push(vscode.window.registerTreeDataProvider("PackageManagerExplorer", Container.get(TreeProvider)));
+}
+
+export async function deactivate(context: vscode.ExtensionContext): Promise<void> {}

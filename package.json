@@ -1,0 +1,154 @@
+{
+  "name": "vscode-package-manager",
+  "displayName": "package manager",
+  "description": "Manager your git projects with Golang style",
+  "version": "0.1.0",
+  "publisher": "axetroy",
+  "engines": {
+    "vscode": "^1.56.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/axetroy/vscode-package-manager.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/axetroy/vscode-package-manager/issues"
+  },
+  "homepage": "https://github.com/axetroy/vscode-package-manager#readme",
+  "keywords": [
+    "package",
+    "manager"
+  ],
+  "categories": [
+    "Other"
+  ],
+  "icon": "resources/logo.png",
+  "main": "./out/index.js",
+  "activationEvents": [
+    "onView:PackageManagerExplorer"
+  ],
+  "contributes": {
+    "viewsWelcome": [
+      {
+        "view": "PackageManagerExplorer",
+        "contents": "No package manager found."
+      }
+    ],
+    "views": {
+      "PackageManagerExplorer": [
+        {
+          "id": "PackageManagerExplorer",
+          "name": "PackageManagerExplorer"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "icon": "resources/activity-bar.svg",
+          "id": "PackageManagerExplorer",
+          "title": "%ext.view.title%"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "pkg.install",
+        "title": "%cmd.install.title%",
+        "category": "PKG",
+        "icon": {
+          "light": "resources/light/command/install.svg",
+          "dark": "resources/dark/command/install.svg"
+        }
+      },
+      {
+        "command": "pkg.uninstall",
+        "title": "%cmd.uninstall.title%",
+        "category": "PKG",
+        "icon": {
+          "light": "resources/light/command/uninstall.svg",
+          "dark": "resources/dark/command/uninstall.svg"
+        }
+      },
+      {
+        "command": "pkg.update",
+        "title": "%cmd.update.title%",
+        "category": "PKG",
+        "icon": {
+          "light": "resources/light/command/update.svg",
+          "dark": "resources/dark/command/update.svg"
+        }
+      },
+      {
+        "command": "pkg.refresh",
+        "title": "%cmd.refresh.title%",
+        "category": "PKG",
+        "icon": {
+          "light": "resources/light/command/refresh.svg",
+          "dark": "resources/dark/command/refresh.svg"
+        }
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "pkg.refresh",
+          "group": "navigation@3",
+          "when": "view == PackageManagerExplorer"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "pkg.refresh",
+          "group": "context",
+          "when": "view == PackageManagerExplorer && viewItem == registry"
+        },
+        {
+          "command": "pkg.install",
+          "group": "context",
+          "when": "view == PackageManagerExplorer && viewItem == registry"
+        },
+        {
+          "command": "pkg.uninstall",
+          "group": "context",
+          "when": "view == PackageManagerExplorer && viewItem == package"
+        },
+        {
+          "command": "pkg.update",
+          "group": "context",
+          "when": "view == PackageManagerExplorer && viewItem == package"
+        }
+      ],
+      "commandPalette": []
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run lint && tsc -p ./ && npm run compile",
+    "clean": "rimraf ./out",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "tslint -p ./ -c tslint.json",
+    "test": "npm run compile && node ./node_modules/vscode/bin/test",
+    "changelog": "whatchanged HEAD~ > CHANGELOG.md",
+    "publish": "npx vsce publish",
+    "package": "npx vsce package"
+  },
+  "devDependencies": {
+    "@types/lodash": "4.14.170",
+    "@types/mocha": "8.2.2",
+    "@types/node": "14.17.3",
+    "@types/vscode": "1.56.0",
+    "@types/which": "2.0.0",
+    "rimraf": "3.0.2",
+    "tslint": "6.1.3",
+    "tslint-config-prettier": "1.18.0",
+    "typescript": "4.3.4"
+  },
+  "dependencies": {
+    "execa": "5.1.1",
+    "reflect-metadata": "^0.1.13",
+    "typedi": "^0.10.0",
+    "vscode-nls-i18n": "0.2.4"
+  }
+}

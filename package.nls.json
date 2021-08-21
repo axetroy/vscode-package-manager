@@ -1,0 +1,19 @@
+{
+  "ext.view.title": "Package Manager",
+  "cmd.uninstall.title": "Uninstall",
+  "cmd.install.title": "Install",
+  "cmd.update.title": "Updates",
+  "cmd.refresh.title": "Refresh",
+  "btn.cancel": "Cancel",
+  "btn.showError": "Show Error Message",
+  "btn.showDetail": "Show Detail",
+  "install.success": "Install {0} success",
+  "uninstall.success": "Uninstall {0} success",
+  "update.doing": "Updating {0} ...",
+  "update.success": "Update {0} success",
+  "install.title": "Install {0} package",
+  "install.packageName": "Package name",
+  "install.packageName.placeholder": "Input the {0} package name that you wanna install",
+  "install.packageVersion.placeholder": "Input the package version, latest will be used if empty",
+  "install.packageVersion.prompt": "Input the version of the package {0}. eg. '1.0.0'"
+}
