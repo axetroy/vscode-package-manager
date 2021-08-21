@@ -27,14 +27,14 @@ vscode extension for managing your Packages that installed in your computer.
 - [ ] yum
 - [ ] nuget
 
+Welcome to PR to support more package
+
 ## Feature
 
 - [x] Install package
 - [x] Uninstall package
 - [x] Update package
 - [x] Upgrade package manager
-
-Welcome to PR to support more
 
 ## [CHANGELOG](https://github.com/axetroy/vscode-package-manager/blob/master/CHANGELOG.md)
 
