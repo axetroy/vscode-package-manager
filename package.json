@@ -1,7 +1,7 @@
 {
   "name": "vscode-package-manager",
   "displayName": "Package Manager",
-  "description": "Manager your git projects with Golang style",
+  "description": "vscode extension for managing your Packages that installed in your computer",
   "version": "0.1.0",
   "publisher": "axetroy",
   "engines": {
