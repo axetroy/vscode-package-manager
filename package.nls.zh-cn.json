@@ -2,7 +2,7 @@
   "ext.view.title": "包管理器",
   "cmd.upgradeSelf.title": "更新包管理器",
   "cmd.uninstall.title": "卸载",
-  "cmd.install.title": "安装",
+  "cmd.install.title": "安装包",
   "cmd.update.title": "更新",
   "cmd.refresh.title": "刷新",
   "btn.cancel": "取消",

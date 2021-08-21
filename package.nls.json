@@ -2,7 +2,7 @@
   "ext.view.title": "Package Manager",
   "cmd.upgradeSelf.title": "Upgrade package manager",
   "cmd.uninstall.title": "Uninstall",
-  "cmd.install.title": "Install",
+  "cmd.install.title": "Install package",
   "cmd.update.title": "Updates",
   "cmd.refresh.title": "Refresh",
   "btn.cancel": "Cancel",
