@@ -9,6 +9,8 @@
 
 vscode extension for managing your Packages that installed in your computer.
 
+![screenshot.png](./screenshot.png)
+
 ## Supported package
 
 - [x] Homebrew
