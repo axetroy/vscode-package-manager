@@ -208,9 +208,9 @@ export class PackageManager {
       vscode.window.showErrorMessage(ErrPackageNotFound(item.package));
       return;
     }
-
+Ï
     await this._createContext(i18n.localize("update.doing", item.name), async (cancelToken) => {
-      const commands = await packageManager.uninstall(item.name, item.version);
+      const commands = await packageManager.update(item.name, item.version, "");
 
       await this._createTask(commands, cancelToken);
 

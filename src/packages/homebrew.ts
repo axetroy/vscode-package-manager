@@ -64,7 +64,7 @@ export class PackageManagerHomeBrew implements IPackageManager {
   }
 
   public async install(packageName: string, version: string): Promise<string> {
-    return `gem install ${packageName + (version ? "@" + version : "")}`;
+    return `brew install ${packageName + (version ? "@" + version : "")}`;
   }
 
   public async uninstall(packageName: string, oldVersion: string): Promise<string> {
