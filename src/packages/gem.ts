@@ -18,14 +18,14 @@ export class PackageManagerGem implements IPackageManager {
   }
 
   public async packages(): Promise<IPackage[]> {
-    const ps = await execa("gem", ["list"]);
+    const ps = await execa("gem", ["list", "--local"]);
 
     const dependencies = ps.stdout
       .split("\n")
       .filter((v) => v.trim())
-      .filter((v) => /\w+\s\([^\)]+\)/)
+      .filter((v) => /(\w-)+\s\([^\)]+\)/)
       .map((v) => {
-        const reg = /(\w+)\s\((default:\s)?([\d\.]+)\)/;
+        const reg = /([\w-]+)\s\((default:\s)?([\d\.]+)\)/;
 
         const matcher = reg.exec(v);
 
@@ -58,8 +58,7 @@ export class PackageManagerGem implements IPackageManager {
   public async uninstall(packageName: string, oldVersion: string, options: IActionOptions): Promise<void> {
     const ps = execa("gem", [
       "uninstall",
-      packageName,
-      ...(oldVersion ? ["--version", oldVersion] : []),
+      packageName + (oldVersion ? `:${oldVersion}` : ""),
       "--executables",
       "--abort-on-dependent",
       "--ignore-dependencies",
