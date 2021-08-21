@@ -8,6 +8,10 @@ export class PackageManagerGem implements IPackageManager {
     return "gem";
   }
 
+  get system(): NodeJS.Platform[] {
+    return ["win32", "linux", "darwin"];
+  }
+
   public async detect(): Promise<boolean> {
     try {
       await which("gem");

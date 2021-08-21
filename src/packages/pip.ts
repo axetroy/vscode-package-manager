@@ -13,6 +13,10 @@ export class PackageManagerPIP implements IPackageManager {
     return "pip";
   }
 
+  get system(): NodeJS.Platform[] {
+    return ["win32", "linux", "darwin"];
+  }
+
   public async detect(): Promise<boolean> {
     try {
       await which("pip");

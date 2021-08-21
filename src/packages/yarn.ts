@@ -14,6 +14,10 @@ export class PackageManagerYarn implements IPackageManager {
     return "yarn";
   }
 
+  get system(): NodeJS.Platform[] {
+    return ["win32", "linux", "darwin"];
+  }
+
   public async detect(): Promise<boolean> {
     try {
       await which("yarn");

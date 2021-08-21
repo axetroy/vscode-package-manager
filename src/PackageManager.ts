@@ -27,6 +27,8 @@ export class PackageManager {
   #packages: IPackageManager[] = [];
 
   public async registry(pkg: IPackageManager): Promise<void> {
+    if (!pkg.system.includes(process.platform)) return;
+
     const isExist = await pkg.detect();
 
     if (isExist) {

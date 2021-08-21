@@ -2,53 +2,63 @@ import { Writable } from "stream";
 import { CancellationToken } from "vscode";
 
 export interface IPackage {
-  package: string; // 包类型
-  name: string; // 包名称
-  version: string; // 包版本
-  parent?: IPackage;
+  package: string; // the package manager name of this package
+  name: string; // package name
+  version: string; // package version
+  parent?: IPackage; // the parent package
 
-  desc?: string;
-  children?: IPackage[];
+  desc?: string; // package description
+  children?: IPackage[]; // the children of this package
 }
 
 export interface IActionOptions {
-  writer: Writable; // 日志输出的地方
-  cancelToken: CancellationToken; // 取消
+  writer: Writable; // the logger writer
+  cancelToken: CancellationToken; // cancen token
 }
 
 export interface IPackageManager {
   /**
-   * 包管理器的名称
+   * the package name
    */
   readonly name: string;
+
   /**
-   * 检测包管理器是否存在
+   * the package manager will be used in the systems
+   */
+  readonly system: NodeJS.Platform[];
+
+  /**
+   * detect the package is installed ot not
    */
   detect(): Promise<boolean>;
 
   /**
-   * 获取包管理器的版本
+   * get the version of this package manager
    */
-  version(): Promise<string>
+  version(): Promise<string>;
 
   /**
-   * 获取包
+   * get the packages which has been installed in the local system
    */
   packages(): Promise<IPackage[]>;
+
   /**
-   * 更新自身包
+   * upgrade the package manager
    */
   updateSelf(options: IActionOptions): Promise<void>;
+
   /**
-   * 安装
+   * install package
    */
   install(packageName: string, version: string, options: IActionOptions): Promise<void>;
+
   /**
-   * 卸载包
+   * uninstall package
    */
   uninstall(packageName: string, oldVersion: string, options: IActionOptions): Promise<void>;
+
   /**
-   * 更新包
+   * update package
    */
   update(packageName: string, oldVersion: string, newVersion: string, options: IActionOptions): Promise<void>;
 }

@@ -14,6 +14,10 @@ export class PackageManagerHomeBrew implements IPackageManager {
     return "homebrew";
   }
 
+  get system(): NodeJS.Platform[] {
+    return ["linux", "darwin"];
+  }
+
   public async detect(): Promise<boolean> {
     try {
       await which("brew");

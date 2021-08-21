@@ -18,6 +18,10 @@ export class PackageManagerNPM implements IPackageManager {
     return "npm";
   }
 
+  get system(): NodeJS.Platform[] {
+    return ["win32", "linux", "darwin"];
+  }
+
   public async detect(): Promise<boolean> {
     try {
       await which("npm");
