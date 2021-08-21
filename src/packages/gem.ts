@@ -1,7 +1,6 @@
 import execa from "execa";
 import which from "which";
-
-import { IActionOptions, IPackage, IPackageManager } from "./interface";
+import { IPackage, IPackageManager } from "./interface";
 
 export class PackageManagerGem implements IPackageManager {
   get name() {
@@ -27,15 +26,8 @@ export class PackageManagerGem implements IPackageManager {
     return ps.stdout.trim();
   }
 
-  public async updateSelf(options: IActionOptions): Promise<void> {
-    const ps = execa("gem", ["update", "--system"]);
-
-    options.cancelToken.onCancellationRequested(() => ps.cancel());
-
-    ps.stdout?.pipe(options.writer);
-    ps.stderr?.pipe(options.writer);
-
-    await ps;
+  public async updateSelf(): Promise<string> {
+    return "gem update --system";
   }
 
   public async packages(): Promise<IPackage[]> {
@@ -65,44 +57,15 @@ export class PackageManagerGem implements IPackageManager {
     return dependencies;
   }
 
-  public async install(packageName: string, version: string, options: IActionOptions): Promise<void> {
-    const ps = execa("gem", ["install", packageName + (version ? `:${version}` : "")]);
-
-    options.cancelToken.onCancellationRequested(() => ps.cancel());
-
-    ps.stdout?.pipe(options.writer);
-    ps.stderr?.pipe(options.writer);
-
-    await ps;
+  public async install(packageName: string, version: string): Promise<string> {
+    return `gem install ${packageName + (version ? `:${version}` : "")}`;
   }
 
-  public async uninstall(packageName: string, oldVersion: string, options: IActionOptions): Promise<void> {
-    const ps = execa("gem", [
-      "uninstall",
-      packageName + (oldVersion ? `:${oldVersion}` : ""),
-      "--executables",
-      "--abort-on-dependent",
-      "--ignore-dependencies",
-      "--backtrace",
-      "--verbose",
-    ]);
-
-    options.cancelToken.onCancellationRequested(() => ps.cancel());
-
-    ps.stdout?.pipe(options.writer);
-    ps.stderr?.pipe(options.writer);
-
-    await ps;
+  public async uninstall(packageName: string, oldVersion: string): Promise<string> {
+    return `gem uninstall ${packageName + (oldVersion ? `:${oldVersion}` : "")} --executables --abort-on-dependent --ignore-dependencies --verbose`;
   }
 
-  public async update(packageName: string, oldVersion: string, newVersion: string, options: IActionOptions): Promise<void> {
-    const ps = execa("gem", ["update", packageName + (newVersion ? `:${newVersion}` : "")]);
-
-    options.cancelToken.onCancellationRequested(() => ps.cancel());
-
-    ps.stdout?.pipe(options.writer);
-    ps.stderr?.pipe(options.writer);
-
-    await ps;
+  public async update(packageName: string, oldVersion: string, newVersion: string): Promise<string> {
+    return `gem update ${packageName + (newVersion ? `:${newVersion}` : "")}`;
   }
 }

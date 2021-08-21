@@ -1,7 +1,6 @@
 import execa from "execa";
 import which from "which";
-
-import { IActionOptions, IPackage, IPackageManager } from "./interface";
+import { IPackage, IPackageManager } from "./interface";
 
 interface PIP3Package {
   name: string;
@@ -41,15 +40,8 @@ export class PackageManagerPIP3 implements IPackageManager {
     return matcher[1] || "";
   }
 
-  public async updateSelf(options: IActionOptions): Promise<void> {
-    const ps = execa("pip3", ["install", "--upgrade", "pip3"]);
-
-    options.cancelToken.onCancellationRequested(() => ps.cancel());
-
-    ps.stdout?.pipe(options.writer);
-    ps.stderr?.pipe(options.writer);
-
-    await ps;
+  public async updateSelf(): Promise<string> {
+    return "pip3 install --upgrade pip3";
   }
 
   public async packages(): Promise<IPackage[]> {
@@ -65,36 +57,15 @@ export class PackageManagerPIP3 implements IPackageManager {
     });
   }
 
-  public async install(packageName: string, version: string, options: IActionOptions): Promise<void> {
-    const ps = execa("pip3", ["install", packageName + (version ? "@" + version : "")]);
-
-    options.cancelToken.onCancellationRequested(() => ps.cancel());
-
-    ps.stdout?.pipe(options.writer);
-    ps.stderr?.pipe(options.writer);
-
-    await ps;
+  public async install(packageName: string, version: string): Promise<string> {
+    return `pip3 install ${packageName + (version ? `@${version}` : "")}`;
   }
 
-  public async uninstall(packageName: string, oldVersion: string, options: IActionOptions): Promise<void> {
-    const ps = execa("pip3", ["uninstall", packageName]);
-
-    options.cancelToken.onCancellationRequested(() => ps.cancel());
-
-    ps.stdout?.pipe(options.writer);
-    ps.stderr?.pipe(options.writer);
-
-    await ps;
+  public async uninstall(packageName: string, oldVersion: string): Promise<string> {
+    return `pip3 uninstall ${packageName} --yes`;
   }
 
-  public async update(packageName: string, oldVersion: string, newVersion: string, options: IActionOptions): Promise<void> {
-    const ps = execa("pip3", ["install", packageName + (newVersion ? "@" + newVersion : "")]);
-
-    options.cancelToken.onCancellationRequested(() => ps.cancel());
-
-    ps.stdout?.pipe(options.writer);
-    ps.stderr?.pipe(options.writer);
-
-    await ps;
+  public async update(packageName: string, oldVersion: string, newVersion: string): Promise<string> {
+    return `pip3 install ${packageName + (newVersion ? "@" + newVersion : "")} --yes`;
   }
 }

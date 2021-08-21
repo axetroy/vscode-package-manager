@@ -1,7 +1,6 @@
 import execa from "execa";
 import which from "which";
-
-import { IActionOptions, IPackage, IPackageManager } from "./interface";
+import { IPackage, IPackageManager } from "./interface";
 
 interface NPMPackage {
   version: string;
@@ -37,15 +36,8 @@ export class PackageManagerNPM implements IPackageManager {
     return ps.stdout.trim();
   }
 
-  public async updateSelf(options: IActionOptions): Promise<void> {
-    const ps = execa("npm", ["install", this.name, "-g"]);
-
-    options.cancelToken.onCancellationRequested(() => ps.cancel());
-
-    ps.stdout?.pipe(options.writer);
-    ps.stderr?.pipe(options.writer);
-
-    await ps;
+  public async updateSelf(): Promise<string> {
+    return `npm install ${this.name} -g`;
   }
 
   public async packages(): Promise<IPackage[]> {
@@ -71,36 +63,15 @@ export class PackageManagerNPM implements IPackageManager {
     return packages;
   }
 
-  public async install(packageName: string, version: string, options: IActionOptions): Promise<void> {
-    const ps = execa("npm", ["install", packageName + (version ? `@${version}` : ""), "-g"]);
-
-    options.cancelToken.onCancellationRequested(() => ps.cancel());
-
-    ps.stdout?.pipe(options.writer);
-    ps.stderr?.pipe(options.writer);
-
-    await ps;
+  public async install(packageName: string, version: string): Promise<string> {
+    return `npm install ${packageName + (version ? `@${version}` : "")} -g`;
   }
 
-  public async uninstall(packageName: string, oldVersion: string, options: IActionOptions): Promise<void> {
-    const ps = execa("npm", ["uninstall", packageName, "-g"]);
-
-    options.cancelToken.onCancellationRequested(() => ps.cancel());
-
-    ps.stdout?.pipe(options.writer);
-    ps.stderr?.pipe(options.writer);
-
-    await ps;
+  public async uninstall(packageName: string, oldVersion: string): Promise<string> {
+    return `npm uninstall ${packageName} -g`;
   }
 
-  public async update(packageName: string, oldVersion: string, newVersion: string, options: IActionOptions): Promise<void> {
-    const ps = execa("npm", ["install", packageName + (newVersion ? `@${newVersion}` : ""), "-g"]);
-
-    options.cancelToken.onCancellationRequested(() => ps.cancel());
-
-    ps.stdout?.pipe(options.writer);
-    ps.stderr?.pipe(options.writer);
-
-    await ps;
+  public async update(packageName: string, oldVersion: string, newVersion: string): Promise<string> {
+    return `npm install ${packageName + (newVersion ? `@${newVersion}` : "")} -g`;
   }
 }

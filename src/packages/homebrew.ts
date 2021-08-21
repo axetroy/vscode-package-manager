@@ -1,6 +1,6 @@
 import execa from "execa";
 import which from "which";
-import { IActionOptions, IPackage, IPackageManager } from "./interface";
+import { IPackage, IPackageManager } from "./interface";
 
 interface BrewPackage {
   name: string;
@@ -44,15 +44,8 @@ export class PackageManagerHomeBrew implements IPackageManager {
     return matcher[1] || "";
   }
 
-  public async updateSelf(options: IActionOptions): Promise<void> {
-    const ps = execa("brew", ["upgrade"]);
-
-    options.cancelToken.onCancellationRequested(() => ps.cancel());
-
-    ps.stdout?.pipe(options.writer);
-    ps.stderr?.pipe(options.writer);
-
-    await ps;
+  public async updateSelf(): Promise<string> {
+    return "brew upgrade"
   }
 
   public async packages(): Promise<IPackage[]> {
@@ -70,36 +63,15 @@ export class PackageManagerHomeBrew implements IPackageManager {
     });
   }
 
-  public async install(packageName: string, version: string, options: IActionOptions): Promise<void> {
-    const ps = execa("brew", ["install", packageName + (version ? "@" + version : "")]);
-
-    options.cancelToken.onCancellationRequested(() => ps.cancel());
-
-    ps.stdout?.pipe(options.writer);
-    ps.stderr?.pipe(options.writer);
-
-    await ps;
+  public async install(packageName: string, version: string): Promise<string> {
+    return `gem install ${packageName + (version ? "@" + version : "")}`;
   }
 
-  public async uninstall(packageName: string, oldVersion: string, options: IActionOptions): Promise<void> {
-    const ps = execa("brew", ["uninstall", packageName]);
-
-    options.cancelToken.onCancellationRequested(() => ps.cancel());
-
-    ps.stdout?.pipe(options.writer);
-    ps.stderr?.pipe(options.writer);
-
-    await ps;
+  public async uninstall(packageName: string, oldVersion: string): Promise<string> {
+    return `brew uninstall ${packageName}`;
   }
 
-  public async update(packageName: string, oldVersion: string, newVersion: string, options: IActionOptions): Promise<void> {
-    const ps = execa("brew", ["upgrade", packageName]);
-
-    options.cancelToken.onCancellationRequested(() => ps.cancel());
-
-    ps.stdout?.pipe(options.writer);
-    ps.stderr?.pipe(options.writer);
-
-    await ps;
+  public async update(packageName: string, oldVersion: string, newVersion: string): Promise<string> {
+    return `brew update ${packageName}`;
   }
 }

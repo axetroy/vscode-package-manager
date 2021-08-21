@@ -1,26 +1,10 @@
-import { window, ProgressLocation, CancellationToken } from "vscode";
+import * as vscode from "vscode";
 import Container, { Service } from "typedi";
 import * as i18n from "vscode-nls-i18n";
 import { IPackageManager, IPackage } from "./packages/interface";
 import { TreeProvider } from "./TreeView";
-import { Logger } from "./Logger";
-import { ExecaError } from "execa";
 
 const ErrPackageNotFound = (packageName: string) => `can not found package '${packageName}'`;
-
-function showAction(message: string, logger: Logger, actions: { [name: string]: () => Promise<void> }) {
-  Object.keys(actions);
-
-  window.showInformationMessage(message, ...Object.keys(actions)).then((actionName) => {
-    if (!actionName) {
-      logger.dispose();
-      return;
-    }
-    const actionFn = actions[actionName];
-
-    actionFn().finally(() => logger.dispose());
-  });
-}
 
 @Service()
 export class PackageManager {
@@ -54,67 +38,74 @@ export class PackageManager {
     treeView.refresh(item);
   }
 
-  private async _createContext(title: string, cb: (logger: Logger, cancelToken: CancellationToken) => Promise<boolean>) {
-    const logger = new Logger();
-
-    try {
-      await window.withProgress(
-        {
-          location: ProgressLocation.Notification,
-          title,
-          cancellable: true,
-        },
-        async (progress, cancelToken) => {
-          return cb(logger, cancelToken);
-        }
-      );
-    } catch (err) {
-      if (err instanceof Error) {
-        logger.write(err.message);
-
-        logger.show();
-        logger.dispose();
-      } else {
-        console.error(err);
+  private async _createContext(title: string, cb: (cancelToken: vscode.CancellationToken) => Promise<boolean>) {
+    await vscode.window.withProgress(
+      {
+        location: vscode.ProgressLocation.Notification,
+        title,
+        cancellable: true,
+      },
+      async (progress, cancelToken) => {
+        return cb(cancelToken);
       }
-    }
+    );
+  }
+
+  private async _createTask(command: string, cancelToken: vscode.CancellationToken) {
+    const task = new vscode.Task(
+      {
+        type: "shell",
+      },
+      vscode.TaskScope.Workspace,
+      "Package Manager",
+      "Package Manager",
+      new vscode.ShellExecution(command)
+    );
+
+    const taskExecution = await vscode.tasks.executeTask(task);
+
+    cancelToken.onCancellationRequested(() => taskExecution.terminate());
+
+    const taskEndPromise = new Promise<void>((resolve, reject) => {
+      const disposable = vscode.tasks.onDidEndTaskProcess((e) => {
+        if (e.execution === taskExecution) {
+          disposable.dispose();
+
+          if (e.exitCode) {
+            reject(e.exitCode);
+          }
+
+          resolve();
+        }
+      });
+    });
+
+    await taskEndPromise;
   }
 
   public async upgradeSelf(item: IPackage) {
     const packageManager = this.#packages.find((v) => v.name === item.package);
 
     if (!packageManager) {
-      window.showErrorMessage(ErrPackageNotFound(item.package));
+      vscode.window.showErrorMessage(ErrPackageNotFound(item.package));
       return;
     }
 
     const pkgName = item.name + (item.version ? `@${item.version}` : "");
 
-    await this._createContext(i18n.localize("upgrade.doing", pkgName), async (logger, cancelToken) => {
-      const isCanceled = await packageManager.updateSelf({ writer: logger, cancelToken }).catch((err) => {
-        if (err && (err as ExecaError).isCanceled) {
-          return Promise.resolve(true);
-        } else {
-          return Promise.reject(err);
-        }
-      });
+    await this._createContext(i18n.localize("upgrade.doing", pkgName), async (cancelToken) => {
+      const commands = await packageManager.updateSelf();
 
-      if (isCanceled) return false;
+      await this._createTask(commands, cancelToken);
 
       this.refreshTree(item.parent);
-
-      showAction(i18n.localize("upgrade.success", pkgName), logger, {
-        [i18n.localize("btn.showDetail")]: async () => {
-          logger.show();
-        },
-      });
 
       return true;
     });
   }
 
   public async install(item: IPackage) {
-    const inputBox = window.createInputBox();
+    const inputBox = vscode.window.createInputBox();
     inputBox.title = i18n.localize("install.title", item.package);
     inputBox.totalSteps = 2;
     inputBox.step = 1;
@@ -172,30 +163,18 @@ export class PackageManager {
     const packageManager = this.#packages.find((v) => v.name === item.package);
 
     if (!packageManager) {
-      window.showErrorMessage(ErrPackageNotFound(item.package));
+      vscode.window.showErrorMessage(ErrPackageNotFound(item.package));
       return;
     }
 
     const pkgName = result.packageName + (result.version ? "@" + result.version : "");
 
-    await this._createContext(i18n.localize("install.doing", pkgName), async (logger, cancelToken) => {
-      const isCanceled = await packageManager.install(result.packageName, result.version, { writer: logger, cancelToken }).catch((err) => {
-        if (err && (err as ExecaError).isCanceled) {
-          return Promise.resolve(true);
-        } else {
-          return Promise.reject(err);
-        }
-      });
+    await this._createContext(i18n.localize("install.doing", pkgName), async (cancelToken) => {
+      const commands = await packageManager.install(result.packageName, result.version);
 
-      if (isCanceled) return false;
+      await this._createTask(commands, cancelToken);
 
       this.refreshTree(item.parent);
-
-      showAction(i18n.localize("install.success", pkgName), logger, {
-        [i18n.localize("btn.showDetail")]: async () => {
-          logger.show();
-        },
-      });
 
       return true;
     });
@@ -205,30 +184,18 @@ export class PackageManager {
     const packageManager = this.#packages.find((v) => v.name === item.package);
 
     if (!packageManager) {
-      window.showErrorMessage(ErrPackageNotFound(item.package));
+      vscode.window.showErrorMessage(ErrPackageNotFound(item.package));
       return;
     }
 
     const pkgName = item.name + (item.version ? `@${item.version}` : "");
 
-    await this._createContext(i18n.localize("uninstall.doing", pkgName), async (logger, cancelToken) => {
-      const isCanceled = await packageManager.uninstall(item.name, item.version, { writer: logger, cancelToken }).catch((err) => {
-        if (err && (err as ExecaError).isCanceled) {
-          return Promise.resolve(true);
-        } else {
-          return Promise.reject(err);
-        }
-      });
+    await this._createContext(i18n.localize("uninstall.doing", pkgName), async (cancelToken) => {
+      const commands = await packageManager.uninstall(item.name, item.version);
 
-      if (isCanceled) return false;
+      await this._createTask(commands, cancelToken);
 
       this.refreshTree(item.parent);
-
-      showAction(i18n.localize("uninstall.success", pkgName), logger, {
-        [i18n.localize("btn.showDetail")]: async () => {
-          logger.show();
-        },
-      });
 
       return true;
     });
@@ -238,28 +205,16 @@ export class PackageManager {
     const packageManager = this.#packages.find((v) => v.name === item.package);
 
     if (!packageManager) {
-      window.showErrorMessage(ErrPackageNotFound(item.package));
+      vscode.window.showErrorMessage(ErrPackageNotFound(item.package));
       return;
     }
 
-    await this._createContext(i18n.localize("update.doing", item.name), async (logger, cancelToken) => {
-      const isCanceled = await packageManager.update(item.name, item.version, "", { writer: logger, cancelToken }).catch((err) => {
-        if (err && (err as ExecaError).isCanceled) {
-          return Promise.resolve(true);
-        } else {
-          return Promise.reject(err);
-        }
-      });
+    await this._createContext(i18n.localize("update.doing", item.name), async (cancelToken) => {
+      const commands = await packageManager.uninstall(item.name, item.version);
 
-      if (isCanceled) return false;
+      await this._createTask(commands, cancelToken);
 
       this.refreshTree(item.parent);
-
-      showAction(i18n.localize("update.success", item.name), logger, {
-        [i18n.localize("btn.showDetail")]: async () => {
-          logger.show();
-        },
-      });
 
       return true;
     });
