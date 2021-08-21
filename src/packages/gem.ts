@@ -45,7 +45,7 @@ export class PackageManagerGem implements IPackageManager {
   }
 
   public async install(packageName: string, version: string, options: IActionOptions): Promise<void> {
-    const ps = execa("gem", ["install", packageName + (version ? "@" + version : ""), "-g"]);
+    const ps = execa("gem", ["install", packageName + (version ? `:${version}` : "")]);
 
     options.cancelToken.onCancellationRequested(() => ps.cancel());
 
@@ -75,6 +75,13 @@ export class PackageManagerGem implements IPackageManager {
   }
 
   public async update(packageName: string, oldVersion: string, newVersion: string, options: IActionOptions): Promise<void> {
-    return this.install(packageName, newVersion, options);
+    const ps = execa("gem", ["update", packageName + (newVersion ? `:${newVersion}` : "")]);
+
+    options.cancelToken.onCancellationRequested(() => ps.cancel());
+
+    ps.stdout?.pipe(options.writer);
+    ps.stderr?.pipe(options.writer);
+
+    await ps;
   }
 }
