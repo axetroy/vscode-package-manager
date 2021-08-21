@@ -1,6 +1,6 @@
 {
   "name": "vscode-package-manager",
-  "displayName": "package manager",
+  "displayName": "Package Manager",
   "description": "Manager your git projects with Golang style",
   "version": "0.1.0",
   "publisher": "axetroy",
