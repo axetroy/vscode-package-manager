@@ -26,8 +26,8 @@ export class TreeProvider implements vscode.TreeDataProvider<IPackage> {
         description: element.version,
         collapsibleState: vscode.TreeItemCollapsibleState.Collapsed,
         iconPath: {
-          dark: this.context.asAbsolutePath(path.join("resources", "dark", element.name + ".svg")),
-          light: this.context.asAbsolutePath(path.join("resources", "light", element.name + ".svg")),
+          dark: this.context.asAbsolutePath(path.join("resources", "dark", "package", element.name + ".svg")),
+          light: this.context.asAbsolutePath(path.join("resources", "light", "package", element.name + ".svg")),
         },
       };
     } else {
