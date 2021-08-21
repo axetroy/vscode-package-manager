@@ -23,10 +23,25 @@ export class PackageManagerNPM implements IPackageManager {
       await which("npm");
       return true;
     } catch (err) {
-      console.error(err);
-      console.log(process.env.PATH);
       return false;
     }
+  }
+
+  public async version(): Promise<string> {
+    const ps = await execa("npm", ["-v"]);
+
+    return ps.stdout.trim();
+  }
+
+  public async updateSelf(options: IActionOptions): Promise<void> {
+    const ps = execa("npm", ["install", this.name, "-g"]);
+
+    options.cancelToken.onCancellationRequested(() => ps.cancel());
+
+    ps.stdout?.pipe(options.writer);
+    ps.stderr?.pipe(options.writer);
+
+    await ps;
   }
 
   public async packages(): Promise<IPackage[]> {

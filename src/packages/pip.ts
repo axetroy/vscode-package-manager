@@ -22,6 +22,32 @@ export class PackageManagerPIP implements IPackageManager {
     }
   }
 
+  public async version(): Promise<string> {
+    const ps = await execa("pip", ["--version"]);
+
+    // pip 19.3.1 from /usr/local/lib/python2.7/site-packages/pip (python 2.7)
+    const stdout = ps.stdout.trim();
+
+    const matcher = /^pip\s([^\s]+)\b/.exec(stdout);
+
+    if (!matcher) {
+      return "";
+    }
+
+    return matcher[1] || "";
+  }
+
+  public async updateSelf(options: IActionOptions): Promise<void> {
+    const ps = execa("pip", ["install", "--upgrade", "pip"]);
+
+    options.cancelToken.onCancellationRequested(() => ps.cancel());
+
+    ps.stdout?.pipe(options.writer);
+    ps.stderr?.pipe(options.writer);
+
+    await ps;
+  }
+
   public async packages(): Promise<IPackage[]> {
     const ps = await execa("pip", ["list", "--format", "json"]);
 

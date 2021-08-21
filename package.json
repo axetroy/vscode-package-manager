@@ -54,6 +54,15 @@
     },
     "commands": [
       {
+        "command": "pkg.upgradeSelf",
+        "title": "%cmd.upgradeSelf.title%",
+        "category": "PKG",
+        "icon": {
+          "light": "resources/light/command/upgradeSelf.svg",
+          "dark": "resources/dark/command/upgradeSelf.svg"
+        }
+      },
+      {
         "command": "pkg.install",
         "title": "%cmd.install.title%",
         "category": "PKG",
@@ -106,6 +115,11 @@
         },
         {
           "command": "pkg.install",
+          "group": "context",
+          "when": "view == PackageManagerExplorer && viewItem == registry"
+        },
+        {
+          "command": "pkg.upgradeSelf",
           "group": "context",
           "when": "view == PackageManagerExplorer && viewItem == registry"
         },

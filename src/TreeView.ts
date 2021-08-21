@@ -11,9 +11,7 @@ export class TreeProvider implements vscode.TreeDataProvider<IPackage> {
   private context: vscode.ExtensionContext = Container.get("context");
 
   // tree view event
-  private privateOnDidChangeTreeData: vscode.EventEmitter<IPackage | undefined> = new vscode.EventEmitter<
-    IPackage | undefined
-  >();
+  private privateOnDidChangeTreeData: vscode.EventEmitter<IPackage | undefined> = new vscode.EventEmitter<IPackage | undefined>();
   public readonly onDidChangeTreeData: vscode.Event<IPackage | undefined> = this.privateOnDidChangeTreeData.event;
 
   public refresh(item?: IPackage): void {
@@ -25,6 +23,7 @@ export class TreeProvider implements vscode.TreeDataProvider<IPackage> {
       return {
         label: element.name.toUpperCase(),
         contextValue: "registry",
+        description: element.version,
         collapsibleState: vscode.TreeItemCollapsibleState.Collapsed,
         iconPath: {
           dark: this.context.asAbsolutePath(path.join("resources", "dark", element.name + ".svg")),
@@ -46,13 +45,17 @@ export class TreeProvider implements vscode.TreeDataProvider<IPackage> {
     // get all possible packages
     if (!element) {
       const registries = this.packageManager.getRegistries();
-      return registries.map((v) => {
-        return {
-          package: v.name,
-          name: v.name,
-          version: "",
-        };
-      });
+      const packages: IPackage[] = [];
+
+      for (const reg of registries) {
+        packages.push({
+          package: reg.name,
+          name: reg.name,
+          version: await reg.version(),
+        });
+      }
+
+      return packages;
     }
 
     if (!element.parent) {

@@ -1,5 +1,6 @@
 {
   "ext.view.title": "包管理器",
+  "cmd.upgradeSelf.title": "更新包管理器",
   "cmd.uninstall.title": "卸载",
   "cmd.install.title": "安装",
   "cmd.update.title": "更新",
@@ -13,6 +14,8 @@
   "uninstall.success": "卸载 {0} 成功",
   "update.doing": "正在更新 {0} ...",
   "update.success": "更新 {0} 成功",
+  "upgrade.doing": "正在更新 {0} ...",
+  "upgrade.success": "更新 {0} 成功",
   "install.title": "安装 {0} 包",
   "install.packageName": "包名称",
   "install.packageName.placeholder": "请输入要安装的 {0} 包名",

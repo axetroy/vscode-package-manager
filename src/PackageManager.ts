@@ -78,6 +78,39 @@ export class PackageManager {
     }
   }
 
+  public async upgradeSelf(item: IPackage) {
+    const packageManager = this.#packages.find((v) => v.name === item.package);
+
+    if (!packageManager) {
+      window.showErrorMessage(ErrPackageNotFound(item.package));
+      return;
+    }
+
+    const pkgName = item.name + (item.version ? `@${item.version}` : "");
+
+    await this._createContext(i18n.localize("upgrade.doing", pkgName), async (logger, cancelToken) => {
+      const isCanceled = await packageManager.updateSelf({ writer: logger, cancelToken }).catch((err) => {
+        if (err && (err as ExecaError).isCanceled) {
+          return Promise.resolve(true);
+        } else {
+          return Promise.reject(err);
+        }
+      });
+
+      if (isCanceled) return false;
+
+      this.refreshTree(item.parent);
+
+      showAction(i18n.localize("upgrade.success", pkgName), logger, {
+        [i18n.localize("btn.showDetail")]: async () => {
+          logger.show();
+        },
+      });
+
+      return true;
+    });
+  }
+
   public async install(item: IPackage) {
     const inputBox = window.createInputBox();
     inputBox.title = i18n.localize("install.title", item.package);

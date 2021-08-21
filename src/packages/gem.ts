@@ -17,6 +17,23 @@ export class PackageManagerGem implements IPackageManager {
     }
   }
 
+  public async version(): Promise<string> {
+    const ps = await execa("gem", ["-v"]);
+
+    return ps.stdout.trim();
+  }
+
+  public async updateSelf(options: IActionOptions): Promise<void> {
+    const ps = execa("gem", ["update", "--system"]);
+
+    options.cancelToken.onCancellationRequested(() => ps.cancel());
+
+    ps.stdout?.pipe(options.writer);
+    ps.stderr?.pipe(options.writer);
+
+    await ps;
+  }
+
   public async packages(): Promise<IPackage[]> {
     const ps = await execa("gem", ["list", "--local"]);
 

@@ -23,6 +23,23 @@ export class PackageManagerYarn implements IPackageManager {
     }
   }
 
+  public async version(): Promise<string> {
+    const ps = await execa("yarn", ["-v"]);
+
+    return ps.stdout.trim();
+  }
+
+  public async updateSelf(options: IActionOptions): Promise<void> {
+    const ps = execa("brew", ["self-update"]);
+
+    options.cancelToken.onCancellationRequested(() => ps.cancel());
+
+    ps.stdout?.pipe(options.writer);
+    ps.stderr?.pipe(options.writer);
+
+    await ps;
+  }
+
   public async packages(): Promise<IPackage[]> {
     const globalDirOs = {
       win32: path.join(process.env.LOCALAPPDATA || "", "Yarn", "config", "global"),

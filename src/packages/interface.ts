@@ -25,10 +25,20 @@ export interface IPackageManager {
    * 检测包管理器是否存在
    */
   detect(): Promise<boolean>;
+
+  /**
+   * 获取包管理器的版本
+   */
+  version(): Promise<string>
+
   /**
    * 获取包
    */
   packages(): Promise<IPackage[]>;
+  /**
+   * 更新自身包
+   */
+  updateSelf(options: IActionOptions): Promise<void>;
   /**
    * 安装
    */

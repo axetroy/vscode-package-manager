@@ -1,5 +1,6 @@
 {
   "ext.view.title": "Package Manager",
+  "cmd.upgradeSelf.title": "Upgrade package manager",
   "cmd.uninstall.title": "Uninstall",
   "cmd.install.title": "Install",
   "cmd.update.title": "Updates",
@@ -11,6 +12,8 @@
   "uninstall.success": "Uninstall {0} success",
   "update.doing": "Updating {0} ...",
   "update.success": "Update {0} success",
+  "upgrade.doing": "Upgrading {0} ...",
+  "upgrade.success": "Upgrading {0} success",
   "install.title": "Install {0} package",
   "install.packageName": "Package name",
   "install.packageName.placeholder": "Input the {0} package name that you wanna install",

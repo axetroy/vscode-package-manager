@@ -1,4 +1,4 @@
-import exec from "execa";
+import execa from "execa";
 import which from "which";
 import { IActionOptions, IPackage, IPackageManager } from "./interface";
 
@@ -23,8 +23,36 @@ export class PackageManagerHomeBrew implements IPackageManager {
     }
   }
 
+  public async version(): Promise<string> {
+    const ps = await execa("brew", ["-v"]);
+
+    // Homebrew 3.0.2
+    // Homebrew/homebrew-core (git revision ef9b; last commit 2021-02-23)
+    // Homebrew/homebrew-cask (git revision f3212; last commit 2021-02-23)
+    const stdout = ps.stdout.trim();
+
+    const matcher = /^Homebrew\s(.+)/.exec(stdout);
+
+    if (!matcher) {
+      return "";
+    }
+
+    return matcher[1] || "";
+  }
+
+  public async updateSelf(options: IActionOptions): Promise<void> {
+    const ps = execa("brew", ["upgrade"]);
+
+    options.cancelToken.onCancellationRequested(() => ps.cancel());
+
+    ps.stdout?.pipe(options.writer);
+    ps.stderr?.pipe(options.writer);
+
+    await ps;
+  }
+
   public async packages(): Promise<IPackage[]> {
-    const output = await exec("brew", ["info", "--json=v1", "--installed"]);
+    const output = await execa("brew", ["info", "--json=v1", "--installed"]);
 
     const deps = JSON.parse(output.stdout) as BrewPackage[];
 
@@ -39,7 +67,7 @@ export class PackageManagerHomeBrew implements IPackageManager {
   }
 
   public async install(packageName: string, version: string, options: IActionOptions): Promise<void> {
-    const ps = exec("brew", ["install", packageName + (version ? "@" + version : "")]);
+    const ps = execa("brew", ["install", packageName + (version ? "@" + version : "")]);
 
     options.cancelToken.onCancellationRequested(() => ps.cancel());
 
@@ -50,7 +78,7 @@ export class PackageManagerHomeBrew implements IPackageManager {
   }
 
   public async uninstall(packageName: string, oldVersion: string, options: IActionOptions): Promise<void> {
-    const ps = exec("brew", ["uninstall", packageName]);
+    const ps = execa("brew", ["uninstall", packageName]);
 
     options.cancelToken.onCancellationRequested(() => ps.cancel());
 
@@ -61,7 +89,7 @@ export class PackageManagerHomeBrew implements IPackageManager {
   }
 
   public async update(packageName: string, oldVersion: string, newVersion: string, options: IActionOptions): Promise<void> {
-    const ps = exec("brew", ["upgrade", packageName]);
+    const ps = execa("brew", ["upgrade", packageName]);
 
     options.cancelToken.onCancellationRequested(() => ps.cancel());
 

@@ -25,6 +25,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   await packageManager.registry(new PackageManagerPIP3());
   await packageManager.registry(new PackageManagerGem());
 
+  context.subscriptions.push(vscode.commands.registerCommand("pkg.upgradeSelf", packageManager.upgradeSelf.bind(packageManager)));
+
   context.subscriptions.push(vscode.commands.registerCommand("pkg.install", packageManager.install.bind(packageManager)));
 
   context.subscriptions.push(vscode.commands.registerCommand("pkg.uninstall", packageManager.uninstall.bind(packageManager)));
