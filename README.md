@@ -19,6 +19,9 @@ vscode extension for managing your Packages that installed in your computer.
 - [x] gem
 - [x] pip
 - [x] pip3
+- [ ] Chocolatey
+- [ ] Scoop
+- [ ] apt
 - [ ] apt
 - [ ] yum
 
