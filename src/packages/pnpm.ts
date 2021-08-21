@@ -57,7 +57,7 @@ export class PackageManagerPNPM implements IPackageManager {
       dependencies?: Dependency;
     }
 
-    const dependencies = JSON.parse(ps.stdout) as Array<Output>;
+    const dependencies = JSON.parse(ps.stdout) as Output[];
 
     if (!dependencies.length) return [];
     if (!dependencies[0].dependencies) return [];
