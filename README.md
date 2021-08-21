@@ -13,18 +13,19 @@ vscode extension for managing your Packages that installed in your computer.
 
 ## Supported package
 
-- [x] Homebrew
-- [x] npm
-- [x] pnpm
-- [x] yarn
-- [x] gem
-- [x] pip
-- [x] pip3
+- [x] [Homebrew](https://brew.sh/)
+- [x] [NPM](https://npmjs.com/)
+- [x] [PNPM](https://pnpm.io/)
+- [x] [classic yarn](https://classic.yarnpkg.com/)
+- [x] [gem](https://rubygems.org/)
+- [x] [pip](https://pip.pypa.io/)
+- [x] [pip3](https://pip.pypa.io/)
 - [ ] Chocolatey
 - [ ] Scoop
 - [ ] apt
 - [ ] apt
 - [ ] yum
+- [ ] nuget
 
 ## Feature
 
