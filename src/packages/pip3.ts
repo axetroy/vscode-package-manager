@@ -2,11 +2,6 @@ import execa from "execa";
 import which from "which";
 import { IPackage, IPackageManager } from "./interface";
 
-interface PIP3Package {
-  name: string;
-  version: string;
-}
-
 export class PackageManagerPIP3 implements IPackageManager {
   get name() {
     return "pip3";
@@ -45,6 +40,11 @@ export class PackageManagerPIP3 implements IPackageManager {
   }
 
   public async packages(): Promise<IPackage[]> {
+    interface PIP3Package {
+      name: string;
+      version: string;
+    }
+
     const ps = await execa("pip3", ["list", "--format", "json"]);
 
     const dependencies = JSON.parse(ps.stdout) as PIP3Package[];

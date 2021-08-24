@@ -2,13 +2,6 @@ import execa from "execa";
 import which from "which";
 import { IPackage, IPackageManager } from "./interface";
 
-interface BrewPackage {
-  name: string;
-  versions: { stable: string; head?: string; bottle: boolean };
-  desc: string;
-  homepage: string;
-}
-
 export class PackageManagerHomeBrew implements IPackageManager {
   get name() {
     return "homebrew";
@@ -45,10 +38,17 @@ export class PackageManagerHomeBrew implements IPackageManager {
   }
 
   public async updateSelf(): Promise<string> {
-    return "brew upgrade"
+    return "brew upgrade";
   }
 
   public async packages(): Promise<IPackage[]> {
+    interface BrewPackage {
+      name: string;
+      versions: { stable: string; head?: string; bottle: boolean };
+      desc: string;
+      homepage: string;
+    }
+
     const output = await execa("brew", ["info", "--json=v1", "--installed"]);
 
     const deps = JSON.parse(output.stdout) as BrewPackage[];

@@ -5,10 +5,6 @@ import execa from "execa";
 import which from "which";
 import { IPackage, IPackageManager } from "./interface";
 
-interface Dependency {
-  [packageName: string]: string;
-}
-
 export class PackageManagerYarn implements IPackageManager {
   get name() {
     return "yarn";
@@ -38,6 +34,10 @@ export class PackageManagerYarn implements IPackageManager {
   }
 
   public async packages(): Promise<IPackage[]> {
+    interface Dependency {
+      [packageName: string]: string;
+    }
+
     const globalDirOs = {
       win32: path.join(process.env.LOCALAPPDATA || "", "Yarn", "config", "global"),
       darwin: os.homedir() + "/.config/yarn/global",

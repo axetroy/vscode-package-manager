@@ -2,11 +2,6 @@ import execa from "execa";
 import which from "which";
 import { IPackage, IPackageManager } from "./interface";
 
-interface PIPPackage {
-  name: string;
-  version: string;
-}
-
 export class PackageManagerPIP implements IPackageManager {
   get name() {
     return "pip";
@@ -41,10 +36,15 @@ export class PackageManagerPIP implements IPackageManager {
   }
 
   public async updateSelf(): Promise<string> {
-    return "pip install --upgrade pip"
+    return "pip install --upgrade pip";
   }
 
   public async packages(): Promise<IPackage[]> {
+    interface PIPPackage {
+      name: string;
+      version: string;
+    }
+
     const ps = await execa("pip", ["list", "--format", "json"]);
 
     const dependencies = JSON.parse(ps.stdout) as PIPPackage[];
@@ -66,6 +66,6 @@ export class PackageManagerPIP implements IPackageManager {
   }
 
   public async update(packageName: string, oldVersion: string, newVersion: string): Promise<string> {
-    return `pip install ${packageName + (newVersion ? "@" + newVersion : "")}`
+    return `pip install ${packageName + (newVersion ? "@" + newVersion : "")}`;
   }
 }

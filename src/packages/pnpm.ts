@@ -2,15 +2,6 @@ import execa from "execa";
 import which from "which";
 import { IPackage, IPackageManager } from "./interface";
 
-interface PNPMPackage {
-  from?: string;
-  version: string;
-}
-
-interface Dependency {
-  [packageName: string]: PNPMPackage;
-}
-
 export class PackageManagerPNPM implements IPackageManager {
   get name() {
     return "pnpm";
@@ -40,6 +31,15 @@ export class PackageManagerPNPM implements IPackageManager {
   }
 
   public async packages(): Promise<IPackage[]> {
+    interface PNPMPackage {
+      from?: string;
+      version: string;
+    }
+
+    interface Dependency {
+      [packageName: string]: PNPMPackage;
+    }
+
     const ps = await execa("pnpm", ["list", "--global", "--json", "--no-color", "--depth", "0"]);
 
     if (!ps.stdout) return [];

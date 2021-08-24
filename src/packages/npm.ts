@@ -2,16 +2,6 @@ import execa from "execa";
 import which from "which";
 import { IPackage, IPackageManager } from "./interface";
 
-interface NPMPackage {
-  version: string;
-  from?: string;
-  dependencies?: Dependency[];
-}
-
-interface Dependency {
-  [packageName: string]: NPMPackage;
-}
-
 export class PackageManagerNPM implements IPackageManager {
   get name() {
     return "npm";
@@ -41,6 +31,16 @@ export class PackageManagerNPM implements IPackageManager {
   }
 
   public async packages(): Promise<IPackage[]> {
+    interface NPMPackage {
+      version: string;
+      from?: string;
+      dependencies?: Dependency[];
+    }
+
+    interface Dependency {
+      [packageName: string]: NPMPackage;
+    }
+
     const ps = await execa("npm", ["list", "-g", "--json", "--depth=1"]);
 
     const dependencies = (JSON.parse(ps.stdout) as { dependencies: Dependency }).dependencies;
