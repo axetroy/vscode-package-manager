@@ -12,11 +12,7 @@ import { PackageManagerPIP } from "./packages/pip";
 import { PackageManagerPIP3 } from "./packages/pip3";
 import { PackageManagerGem } from "./packages/gem";
 
-export async function activate(context: vscode.ExtensionContext): Promise<void> {
-  i18n.init(context.extensionPath);
-
-  Container.set("context", context);
-
+async function startUp(context: vscode.ExtensionContext) {
   const packageManager = Container.get(PackageManager);
 
   await packageManager.registry(new PackageManagerNPM());
@@ -39,6 +35,14 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
   // tree view
   context.subscriptions.push(vscode.window.registerTreeDataProvider("PackageManagerExplorer", Container.get(TreeProvider)));
+}
+
+export async function activate(context: vscode.ExtensionContext): Promise<void> {
+  i18n.init(context.extensionPath);
+
+  Container.set("context", context);
+
+  startUp(context);
 }
 
 export async function deactivate(context: vscode.ExtensionContext): Promise<void> {

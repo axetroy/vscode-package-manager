@@ -1,7 +1,6 @@
 import execa from "execa";
 import which from "which";
 import { IPackage, IPackageManager } from "./interface";
-
 export class PackageManagerGem implements IPackageManager {
   get name() {
     return "gem";
