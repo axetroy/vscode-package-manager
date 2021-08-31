@@ -47,7 +47,7 @@ export class PackageManagerChocolatey implements IPackageManager {
         const pkg: IPackage = {
           package: this.name,
           name: packageName,
-          version: version,
+          version,
         };
 
         return pkg;
