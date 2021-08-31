@@ -4,7 +4,7 @@ import { IPackage, IPackageManager } from "./interface";
 
 export class PackageManagerChocolatey implements IPackageManager {
   get name() {
-    return "Chocolatey";
+    return "chocolatey";
   }
 
   get system(): NodeJS.Platform[] {
