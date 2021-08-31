@@ -11,7 +11,7 @@ import { PackageManagerHomeBrew } from "./packages/homebrew";
 import { PackageManagerPIP } from "./packages/pip";
 import { PackageManagerPIP3 } from "./packages/pip3";
 import { PackageManagerGem } from "./packages/gem";
-import { PackageManagerChocolatey } from "./packages/Chocolatey";
+import { PackageManagerChocolatey } from "./packages/chocolatey";
 
 async function startUp(context: vscode.ExtensionContext) {
   const packageManager = Container.get(PackageManager);
