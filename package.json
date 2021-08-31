@@ -2,7 +2,7 @@
   "name": "vscode-package-manager",
   "displayName": "Package Manager",
   "description": "vscode extension for managing your Packages that installed in your computer",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "publisher": "axetroy",
   "engines": {
     "vscode": "^1.56.0"
