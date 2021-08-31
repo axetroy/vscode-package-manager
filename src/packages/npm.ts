@@ -72,6 +72,6 @@ export class PackageManagerNPM implements IPackageManager {
   }
 
   public async update(packageName: string, oldVersion: string, newVersion: string): Promise<string> {
-    return `npm install ${packageName + (newVersion ? `@${newVersion}` : "")} -g`;
+    return `npm update ${packageName + (newVersion ? `@${newVersion}` : "")} -g`;
   }
 }
