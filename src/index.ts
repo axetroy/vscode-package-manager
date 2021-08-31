@@ -11,6 +11,7 @@ import { PackageManagerHomeBrew } from "./packages/homebrew";
 import { PackageManagerPIP } from "./packages/pip";
 import { PackageManagerPIP3 } from "./packages/pip3";
 import { PackageManagerGem } from "./packages/gem";
+import { PackageManagerChocolatey } from "./packages/Chocolatey";
 
 async function startUp(context: vscode.ExtensionContext) {
   const packageManager = Container.get(PackageManager);
@@ -22,6 +23,7 @@ async function startUp(context: vscode.ExtensionContext) {
   await packageManager.registry(new PackageManagerPIP());
   await packageManager.registry(new PackageManagerPIP3());
   await packageManager.registry(new PackageManagerGem());
+  await packageManager.registry(new PackageManagerChocolatey());
 
   context.subscriptions.push(vscode.commands.registerCommand("pkg.upgradeSelf", packageManager.upgradeSelf.bind(packageManager)));
 

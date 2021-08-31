@@ -20,7 +20,7 @@ vscode extension for managing your Packages that installed in your computer.
 - [x] [gem](https://rubygems.org/)
 - [x] [pip](https://pip.pypa.io/)
 - [x] [pip3](https://pip.pypa.io/)
-- [ ] Chocolatey
+- [x] Chocolatey
 - [ ] Scoop
 - [ ] apt
 - [ ] apt
