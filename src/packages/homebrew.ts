@@ -72,6 +72,6 @@ export class PackageManagerHomeBrew implements IPackageManager {
   }
 
   public async update(packageName: string, oldVersion: string, newVersion: string): Promise<string> {
-    return `brew update ${packageName}`;
+    return `brew upgrade ${packageName}`;
   }
 }
