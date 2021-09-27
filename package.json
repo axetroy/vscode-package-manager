@@ -149,7 +149,7 @@
     "package": "npx vsce package"
   },
   "devDependencies": {
-    "@types/lodash": "4.14.172",
+    "@types/lodash": "4.14.175",
     "@types/mocha": "9.0.0",
     "@types/node": "14.17.16",
     "@types/vscode": "1.56.0",
