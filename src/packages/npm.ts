@@ -1,19 +1,19 @@
-import execa from "execa";
-import which from "which";
-import { IPackage, IPackageManager } from "./interface";
+import execa from 'execa';
+import which from 'which';
+import { IPackage, IPackageManager } from './interface';
 
 export class PackageManagerNPM implements IPackageManager {
   get name() {
-    return "npm";
+    return 'npm';
   }
 
   get system(): NodeJS.Platform[] {
-    return ["win32", "linux", "darwin"];
+    return ['win32', 'linux', 'darwin'];
   }
 
   public async detect(): Promise<boolean> {
     try {
-      await which("npm");
+      await which('npm');
       return true;
     } catch (err) {
       return false;
@@ -21,7 +21,7 @@ export class PackageManagerNPM implements IPackageManager {
   }
 
   public async version(): Promise<string> {
-    const ps = await execa("npm", ["-v"]);
+    const ps = await execa('npm', ['-v']);
 
     return ps.stdout.trim();
   }
@@ -41,7 +41,7 @@ export class PackageManagerNPM implements IPackageManager {
       [packageName: string]: NPMPackage;
     }
 
-    const ps = await execa("npm", ["list", "-g", "--json", "--depth=1"]);
+    const ps = await execa('npm', ['list', '-g', '--json', '--depth 0']);
 
     const dependencies = (JSON.parse(ps.stdout) as { dependencies: Dependency }).dependencies;
 
@@ -56,7 +56,7 @@ export class PackageManagerNPM implements IPackageManager {
         package: this.name,
         name: depName,
         version: dep.version,
-        desc: "",
+        desc: '',
       });
     }
 
@@ -64,7 +64,7 @@ export class PackageManagerNPM implements IPackageManager {
   }
 
   public async install(packageName: string, version: string): Promise<string> {
-    return `npm install ${packageName + (version ? `@${version}` : "")} -g`;
+    return `npm install ${packageName + (version ? `@${version}` : '')} -g`;
   }
 
   public async uninstall(packageName: string, oldVersion: string): Promise<string> {
@@ -72,6 +72,6 @@ export class PackageManagerNPM implements IPackageManager {
   }
 
   public async update(packageName: string, oldVersion: string, newVersion: string): Promise<string> {
-    return `npm update ${packageName + (newVersion ? `@${newVersion}` : "")} -g`;
+    return `npm update ${packageName + (newVersion ? `@${newVersion}` : '')} -g`;
   }
 }
