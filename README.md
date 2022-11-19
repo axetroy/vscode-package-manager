@@ -21,6 +21,7 @@ vscode extension for managing your Packages that installed in your computer.
 - [x] [pip](https://pip.pypa.io/)
 - [x] [pip3](https://pip.pypa.io/)
 - [x] [Chocolatey](https://chocolatey.org/)
+- [x] [Cask](https://github.com/cask-pkg/cask.rs)
 - [ ] Scoop
 - [ ] apt
 - [ ] apt

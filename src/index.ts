@@ -1,5 +1,6 @@
 import "reflect-metadata";
 import { Container } from "typedi";
+import fixPath from "fix-path";
 import * as vscode from "vscode";
 import * as i18n from "vscode-nls-i18n";
 import { TreeProvider } from "./TreeView";
@@ -12,6 +13,9 @@ import { PackageManagerPIP } from "./packages/pip";
 import { PackageManagerPIP3 } from "./packages/pip3";
 import { PackageManagerGem } from "./packages/gem";
 import { PackageManagerChocolatey } from "./packages/chocolatey";
+import { PackageManagerCask } from "./packages/cask";
+
+fixPath();
 
 async function startUp(context: vscode.ExtensionContext) {
   const packageManager = Container.get(PackageManager);
@@ -24,6 +28,7 @@ async function startUp(context: vscode.ExtensionContext) {
   await packageManager.registry(new PackageManagerPIP3());
   await packageManager.registry(new PackageManagerGem());
   await packageManager.registry(new PackageManagerChocolatey());
+  await packageManager.registry(new PackageManagerCask());
 
   context.subscriptions.push(vscode.commands.registerCommand("pkg.upgradeSelf", packageManager.upgradeSelf.bind(packageManager)));
 
